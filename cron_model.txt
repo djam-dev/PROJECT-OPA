@@ -1,0 +1,3 @@
+# Création d'un cron tout les jours à minuit 
+
+0 0 * * * /home/ubuntu/cours_spark_env/bin/python3  projet_opa/binance_model.ipybn
