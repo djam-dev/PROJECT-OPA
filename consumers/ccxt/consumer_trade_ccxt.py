@@ -38,16 +38,6 @@ cur.execute("""
 """)
 conn.commit()
 
-# Préparation fichier CSV
-last_saved_time = 0
-save_interval = 1
-today = datetime.datetime.now().strftime("%Y-%m-%d")
-csv_path = Path(f"binance_trades_{today}.csv")
-
-if not csv_path.exists():
-    with open(csv_path, mode='w', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(['symbol', 'price', 'quantity', 'timestamp'])
 
 consumer = KafkaConsumer(
     KAFKA_TOPIC,
@@ -57,7 +47,7 @@ consumer = KafkaConsumer(
     group_id='binance-consumer'
 )
 
-print("🎯 Consumer démarré et connecté à Kafka et PostgreSQL")
+print("🎯 Consumer CCXT démarré et connecté à Kafka et PostgreSQL")
 
 def insert_trade(data):
     try:
@@ -67,20 +57,17 @@ def insert_trade(data):
             INSERT INTO binance_trades (symbol, price, quantity, timestamp)
             VALUES (%s, %s, %s, %s)
         """
-        values = (data["s"], float(data["p"]), float(data["q"]), formatted_time)
+        values = (
+            data["symbol"],
+            float(data["price"]),
+            float(data["amount"]),
+            formatted_time
+        )
         cur.execute(query, values)
         conn.commit()
-        print(f"Inséré : {data['s']} à {formatted_time}")
+        print(f"Inséré : {data['symbol']} à {formatted_time}")
     except Exception as e:
         print(f"Erreur insertion : {e}")
-
-    global last_saved_time
-    current_time = time.time()
-    if current_time - last_saved_time >= save_interval:
-        with open(csv_path, mode='a', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow([data["s"], data["p"], data["q"], formatted_time])
-        last_saved_time = current_time
 
 # Boucle principale Kafka
 for message in consumer:
