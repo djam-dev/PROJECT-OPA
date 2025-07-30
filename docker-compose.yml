@@ -49,15 +49,23 @@ services:
     ports:
       - "5050:80"
 
-  producer:
+  #producer:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+  #  depends_on:
+  #    - kafka
+  #    - postgre
+  #  environment:
+  #    KAFKA_HOST: kafka:9092
+
+  producer_ccxt:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./producers/ccxt
     depends_on:
       - kafka
-      - postgre
     environment:
-      KAFKA_HOST: kafka:9092
+      - KAFKA_SERVER=kafka:9092
 
   consumer:
     build:
