@@ -9,7 +9,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copie du code
-COPY consumer_ccxt.py .
+COPY consumer_trade_ccxt.py .
 
 # Commande d'exécution
-CMD ["python", "consumer_ccxt.py"]
+CMD ["python", "consumer_trade_ccxt.py"]
