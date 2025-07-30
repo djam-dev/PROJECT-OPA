@@ -67,15 +67,28 @@ services:
     environment:
       - KAFKA_SERVER=kafka:9092
 
-  consumer:
+  #consumer:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+  #  depends_on:
+  #    - kafka
+  #    - postgre
+  #  environment:
+  #    KAFKA_HOST: kafka:9092
+
+  consumer_ccxt:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./consumers/ccxt
     depends_on:
       - kafka
       - postgre
     environment:
-      KAFKA_HOST: kafka:9092
+      - KAFKA_SERVER=kafka:9092
+      - POSTGRES_HOST=postgre
+      - POSTGRES_DB=binance_data
+      - POSTGRES_USER=VALDML
+      - POSTGRES_PASSWORD=PROJETOPA
 
   jupyter:
     build:
