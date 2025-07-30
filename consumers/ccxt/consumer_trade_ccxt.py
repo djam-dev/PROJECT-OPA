@@ -5,8 +5,9 @@ import datetime
 import csv
 from pathlib import Path
 from kafka import KafkaConsumer
+import os
 
-# 🔧 Chargement de la configuration depuis les variables d'environnement
+# Chargement de la configuration depuis les variables d'environnement
 POSTGRES_DB = os.environ.get("POSTGRES_DB", "binance_data")
 POSTGRES_USER = os.environ.get("POSTGRES_USER", "postgres")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "postgres")
@@ -16,7 +17,7 @@ POSTGRES_PORT = os.environ.get("POSTGRES_PORT", "5432")
 KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_SERVER", "localhost:9092")
 KAFKA_TOPIC = os.environ.get("KAFKA_TOPIC", "Binance_trades")
 
-# Connexion à PostgreSQL (⚠️ Adapter au conteneur Docker)
+# Connexion à PostgreSQL
 conn = psycopg2.connect(
     dbname=POSTGRES_DB,
     user=POSTGRES_USER,
@@ -69,9 +70,9 @@ def insert_trade(data):
         values = (data["s"], float(data["p"]), float(data["q"]), formatted_time)
         cur.execute(query, values)
         conn.commit()
-        print(f"✅ Inséré : {data['s']} à {formatted_time}")
+        print(f"Inséré : {data['s']} à {formatted_time}")
     except Exception as e:
-        print(f"❌ Erreur insertion : {e}")
+        print(f"Erreur insertion : {e}")
 
     global last_saved_time
     current_time = time.time()
