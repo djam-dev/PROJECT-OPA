@@ -51,7 +51,7 @@ print("🎯 Consumer CCXT démarré et connecté à Kafka et PostgreSQL")
 
 def insert_trade(data):
     try:
-        timestamp = int(data["T"]) / 1000
+        timestamp = int(data["timestamp"]) / 1000
         formatted_time = datetime.datetime.fromtimestamp(timestamp)
         query = """
             INSERT INTO binance_trades (symbol, price, quantity, timestamp)
