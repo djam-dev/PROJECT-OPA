@@ -92,13 +92,13 @@ services:
       - kafka
       - postgres
     environment:
-      - POSTGRES_DB: binance_data
-      - POSTGRES_USER: VALDML
-      - POSTGRES_PASSWORD: PROJETOPA
-      - POSTGRES_HOST: postgre
-      - POSTGRES_PORT: 5432
-      - KAFKA_SERVER: kafka:9092
-      - KAFKA_TOPIC: Binance_trades
+      POSTGRES_DB: binance_data
+      POSTGRES_USER: VALDML
+      POSTGRES_PASSWORD: PROJETOPA
+      POSTGRES_HOST: postgre
+      POSTGRES_PORT: "5432"
+      KAFKA_SERVER: kafka:9092
+      KAFKA_TOPIC: Binance_trades
 
   jupyter:
     build:
