@@ -3,6 +3,8 @@ version: "3.8"
 services:
   zookeeper:
     image: wurstmeister/zookeeper
+    build:
+      context: ./services/zookeeper
     ports:
       - "2181:2181"
 
@@ -35,6 +37,8 @@ services:
 
   postgres:
     image: postgres:16-alpine
+    build:
+      context: ./services/postgres
     restart: always
     environment:
       POSTGRES_USER: VALDML
