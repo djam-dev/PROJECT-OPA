@@ -43,8 +43,8 @@ consumer = KafkaConsumer(
     KAFKA_TOPIC,
     bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
     value_deserializer=lambda m: json.loads(m.decode('utf-8')),
-    auto_offset_reset='latest',
-    group_id='binance-consumer'
+    auto_offset_reset='earliest',
+    group_id='binance-consumer-ccxt'
 )
 
 print("🎯 Consumer CCXT démarré et connecté à Kafka et PostgreSQL")
@@ -72,4 +72,5 @@ def insert_trade(data):
 # Boucle principale Kafka
 for message in consumer:
     data = message.value
+    print("Message reçu :", message.value)
     insert_trade(data)
