@@ -8,6 +8,8 @@ services:
 
   kafka:
     image: wurstmeister/kafka
+    build:
+      context: ./services/kafka
     depends_on:
       - zookeeper
     ports:
@@ -20,6 +22,8 @@ services:
 
   kafkaui:
     image: provectuslabs/kafka-ui
+    build:
+      context: ./services/kafka-ui
     depends_on:
       - kafka
       - zookeeper
@@ -29,7 +33,7 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
 
-  postgre:
+  postgres:
     image: postgres:16-alpine
     restart: always
     environment:
@@ -82,13 +86,15 @@ services:
       context: ./consumers/ccxt
     depends_on:
       - kafka
-      - postgre
+      - postgres
     environment:
-      - KAFKA_SERVER=kafka:9092
-      - POSTGRES_HOST=postgre
-      - POSTGRES_DB=binance_data
-      - POSTGRES_USER=VALDML
-      - POSTGRES_PASSWORD=PROJETOPA
+      - POSTGRES_DB: binance_data
+      - POSTGRES_USER: VALDML
+      - POSTGRES_PASSWORD: PROJETOPA
+      - POSTGRES_HOST: postgre
+      - POSTGRES_PORT: 5432
+      - KAFKA_SERVER: kafka:9092
+      - KAFKA_TOPIC: Binance_trades
 
   jupyter:
     build:
@@ -100,7 +106,7 @@ services:
       - ./projet_opa:/app
     depends_on:
       - kafka
-      - postgre
+      - postgres
     command: ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --no-browser"]
 
   fastapi:
@@ -111,4 +117,4 @@ services:
       - "8000:8000"
     depends_on:
       - kafka
-      - postgre
+      - postgres
