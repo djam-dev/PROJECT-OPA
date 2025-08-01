@@ -10,15 +10,28 @@ DB_PASSWORD = os.getenv("POSTGRES_PASSWORD", "PROJETOPA")
 DB_HOST = os.getenv("POSTGRES_HOST", "postgres")
 DB_PORT = os.getenv("POSTGRES_PORT", "5432")
 
+# Fonction de connexion avec retry
+def wait_for_postgres():
+    for i in range(10):
+        try:
+            conn = psycopg2.connect(
+                dbname=POSTGRES_DB,
+                user=POSTGRES_USER,
+                password=POSTGRES_PASSWORD,
+                host=POSTGRES_HOST,
+                port=POSTGRES_PORT
+            )
+            print("✅ Connexion PostgreSQL établie.")
+            return conn
+        except psycopg2.OperationalError:
+            print(f"⏳ PostgreSQL pas encore prêt... tentative {i+1}/10")
+            time.sleep(3)
+    raise Exception("❌ Impossible de se connecter à PostgreSQL après 10 tentatives.")
+
 # Connexion
-conn = psycopg2.connect(
-    dbname=DB_NAME,
-    user=DB_USER,
-    password=DB_PASSWORD,
-    host=DB_HOST,
-    port=DB_PORT
-)
+conn = wait_for_postgres()
 cur = conn.cursor()
+
 
 # Création des tables si elles n'existent pas
 cur.execute("""
