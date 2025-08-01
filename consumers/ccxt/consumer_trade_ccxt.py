@@ -14,7 +14,7 @@ POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "postgres")
 POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "localhost")
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT", "5432")
 
-KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_SERVER", "localhost:9092")
+KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_SERVER", "kafka:9092")
 KAFKA_TOPIC = os.environ.get("KAFKA_TOPIC", "Binance_trades")
 
 # Connexion à PostgreSQL
