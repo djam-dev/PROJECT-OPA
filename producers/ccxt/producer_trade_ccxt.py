@@ -3,12 +3,18 @@ import time
 import json
 from kafka import KafkaProducer
 
+# CCXT
+exchange = ccxt.binance()
+symbol = 'BTC/USDT'
+limit = 500
+
 def load_last_timestamp(filename="last_timestamp.txt"):
     try:
         with open(filename, "r") as f:
             return int(f.read().strip())
     except FileNotFoundError:
-        return exchange.milliseconds() - 60 * 60 * 1000  # par défaut : 1h d'historique
+        print("Aucun fichier de timestamp trouvé. Démarrage à partir de 2024-08-01")
+        return exchange.parse8601("2024-08-01T00:00:00Z")
 
 def save_last_timestamp(ts, filename="last_timestamp.txt"):
     with open(filename, "w") as f:
@@ -19,11 +25,6 @@ kafka_producer = KafkaProducer(
     bootstrap_servers='kafka:9092',
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
 )
-
-# CCXT
-exchange = ccxt.binance()
-symbol = 'BTC/USDT'
-limit = 500
 
 # Chargement de la dernière position
 since = exchange.parse8601("2024-08-01T00:00:00Z")
