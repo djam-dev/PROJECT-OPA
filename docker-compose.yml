@@ -100,6 +100,18 @@ services:
       KAFKA_SERVER: kafka:9092
       KAFKA_TOPIC: Binance_trades
 
+  aggregator:
+    build:
+      context: ./aggregators/trades
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_DB: binance_data
+      POSTGRES_USER: VALDML
+      POSTGRES_PASSWORD: PROJETOPA
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+
   jupyter:
     build:
       context: .
