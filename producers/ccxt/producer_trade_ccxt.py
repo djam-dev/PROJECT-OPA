@@ -26,7 +26,7 @@ symbol = 'BTC/USDT'
 limit = 500
 
 # Chargement de la dernière position
-since = load_last_timestamp()
+since = exchange.parse8601("2024-08-01T00:00:00Z")
 
 print(f"Démarrage à partir de {since}")
 
