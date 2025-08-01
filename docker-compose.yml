@@ -136,3 +136,6 @@ services:
     depends_on:
       - kafka
       - postgres
+
+volumes:
+  postgres_data:
