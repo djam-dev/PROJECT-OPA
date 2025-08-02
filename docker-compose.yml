@@ -78,7 +78,7 @@ services:
 
   producer_ccxt:
     build:
-      context: ./producers/ccxt
+      context: ./producers/ohlcv_5m
     depends_on:
       - kafka
     environment:
@@ -96,7 +96,7 @@ services:
 
   consumer_ccxt:
     build:
-      context: ./consumers/ccxt
+      context: ./consumers/ohlcv_5m
     depends_on:
       - kafka
       - postgres
