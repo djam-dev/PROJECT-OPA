@@ -14,7 +14,7 @@ POSTGRES_HOST = os.environ.get("POSTGRES_HOST", "postgres")
 POSTGRES_PORT = os.environ.get("POSTGRES_PORT", "5432")
 
 KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_SERVER", "kafka:9092")
-KAFKA_TOPIC = os.environ.get("KAFKA_TOPIC", "Binance_ohlcv") 
+KAFKA_TOPIC = os.environ.get("KAFKA_TOPIC", "Binance_ohlcv_5m") 
 
 # Connexion PostgreSQL avec retry
 def wait_for_postgres():
@@ -43,7 +43,7 @@ def wait_for_kafka():
                 bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
                 value_deserializer=lambda m: json.loads(m.decode('utf-8')),
                 auto_offset_reset='earliest',
-                group_id='binance-consumer-ohlcv'
+                group_id='binance-consumer-ohlcv-5m'
             )
             print("Connexion Kafka réussie.")
             return consumer
@@ -59,7 +59,7 @@ consumer = wait_for_kafka()
 
 # Création de la table pour les bougies
 cur.execute("""
-    CREATE TABLE IF NOT EXISTS binance_ohlcv (
+    CREATE TABLE IF NOT EXISTS binance_ohlcv_5m (
         timestamp TIMESTAMP PRIMARY KEY,
         symbol TEXT,
         timeframe TEXT,
@@ -79,7 +79,7 @@ def insert_candle(data):
     try:
         timestamp = datetime.datetime.fromtimestamp(int(data["timestamp"]) / 1000)
         cur.execute("""
-            INSERT INTO binance_ohlcv (timestamp, symbol, timeframe, open, high, low, close, volume)
+            INSERT INTO binance_ohlcv_5m (timestamp, symbol, timeframe, open, high, low, close, volume)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
             ON CONFLICT (timestamp) DO NOTHING
         """, (
