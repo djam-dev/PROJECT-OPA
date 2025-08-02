@@ -3,13 +3,15 @@ import time
 import json
 from kafka import KafkaProducer
 
-# CCXT setup
-exchange = ccxt.binance()
+# Paramètres
 symbol = 'BTC/USDT'
-timeframe = '1m'  # Tu peux aussi utiliser '5m', '1h', etc.
+timeframe = '5m' 
 limit = 500
 
-# Chargement du dernier timestamp
+# Exchange
+exchange = ccxt.binance()
+
+# Chargement de la date de départ
 def load_last_timestamp(filename="last_timestamp.txt"):
     try:
         with open(filename, "r") as f:
@@ -52,7 +54,7 @@ try:
                 kafka_producer.send("Binance_ohlcv", value=data)
 
             print(f"{len(candles)} bougies envoyées à Kafka depuis {since}")
-            since = candles[-1][0] + exchange.parse_timeframe(timeframe) * 1000  # passe à la bougie suivante
+            since = candles[-1][0] + exchange.parse_timeframe(timeframe) * 1000
             save_last_timestamp(since)
             time.sleep(exchange.rateLimit / 1000)
         else:
