@@ -64,7 +64,7 @@ try:
                     "symbol": symbol,
                     "timeframe": timeframe
                 }
-                kafka_producer.send("Binance_ohlcv", value=data)
+                kafka_producer.send("Binance_ohlcv_5m", value=data)
 
             print(f"{len(candles)} bougies envoyées à Kafka depuis {since}")
             since = candles[-1][0] + exchange.parse_timeframe(timeframe) * 1000
