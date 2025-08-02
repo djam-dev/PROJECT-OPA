@@ -2,6 +2,7 @@ import ccxt
 import time
 import json
 from kafka import KafkaProducer
+from kafka.errors import NoBrokersAvailable
 
 # Paramètres
 symbol = 'BTC/USDT'
@@ -23,12 +24,24 @@ def load_last_timestamp(filename="last_timestamp.txt"):
 def save_last_timestamp(ts, filename="last_timestamp.txt"):
     with open(filename, "w") as f:
         f.write(str(ts))
+        
+# Attente de Kafka
+def wait_for_kafka(bootstrap_servers='kafka:9092', retries=10, delay=5):
+    for i in range(retries):
+        try:
+            producer = KafkaProducer(
+                bootstrap_servers=bootstrap_servers,
+                value_serializer=lambda v: json.dumps(v).encode('utf-8')
+            )
+            print("Connexion à Kafka établie")
+            return producer
+        except NoBrokersAvailable:
+            print(f"Kafka non disponible... tentative {i+1}/{retries}")
+            time.sleep(delay)
+    raise Exception("Kafka inaccessible après plusieurs tentatives")
 
 # Kafka setup
-kafka_producer = KafkaProducer(
-    bootstrap_servers='kafka:9092',
-    value_serializer=lambda v: json.dumps(v).encode('utf-8')
-)
+kafka_producer = wait_for_kafka()
 
 # Point de départ
 since = load_last_timestamp()
