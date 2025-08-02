@@ -3,15 +3,11 @@ version: "3.8"
 services:
   zookeeper:
     image: wurstmeister/zookeeper
-    build:
-      context: ./services/zookeeper
     ports:
       - "2181:2181"
 
   kafka:
     image: wurstmeister/kafka
-    build:
-      context: ./services/kafka
     depends_on:
       - zookeeper
     ports:
@@ -29,8 +25,6 @@ services:
 
   kafkaui:
     image: provectuslabs/kafka-ui
-    build:
-      context: ./services/kafka-ui
     depends_on:
       - kafka
       - zookeeper
