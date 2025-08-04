@@ -73,16 +73,21 @@ def train_and_save_model(X, y):
 
 # Attente que la table soit disponible
 def wait_for_table():
-    print(f"⏳ Attente que la table '{TABLE_NAME}' soit disponible...")
+    import pandas.errors
     import psycopg2.errors
+    print(f"Attente que la table '{TABLE_NAME}' soit disponible...")
+
     while True:
         try:
             _ = load_data()
-            print(f"✅ Table '{TABLE_NAME}' disponible.")
+            print(f"Table '{TABLE_NAME}' disponible.")
             break
-        except psycopg2.errors.UndefinedTable:
-            print("⏳ Table non encore créée, nouvelle tentative dans 3s...")
-            time.sleep(3)
+        except pandas.errors.DatabaseError as e:
+            if 'does not exist' in str(e):
+                print("Table non encore créée, nouvelle tentative dans 3s...")
+                time.sleep(3)
+            else:
+                raise e
 
 def main():
     wait_for_table()
