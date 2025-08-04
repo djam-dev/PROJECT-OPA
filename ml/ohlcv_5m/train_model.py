@@ -66,6 +66,7 @@ def train_and_save_model(X, y):
     score = model.score(X_test, y_test)
     print(f"Score R² sur le jeu de test : {score:.4f}")
 
+    # Point d’entrée
     joblib.dump(model, MODEL_PATH)
     print(f"Modèle sauvegardé sous {MODEL_PATH}")
 
