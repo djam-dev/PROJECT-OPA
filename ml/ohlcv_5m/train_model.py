@@ -9,7 +9,7 @@ from datetime import datetime
 # Paramètres
 SEQ_LEN = 12  # 1 heure d'historique
 FEATURES = ['open', 'high', 'low', 'close', 'volume']
-MODEL_PATH = "/app/model.pkl"
+MODEL_PATH = "model.pkl"
 TABLE_NAME = "binance_ohlcv_5m"
 
 DB_PARAMS = {

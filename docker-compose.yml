@@ -53,7 +53,7 @@ services:
       context: ./ml/ohlcv_5m
       dockerfile: Dockerfile.train
     volumes:
-      - project-opa_model_data:/app
+      - model_data:/app
     depends_on:
       - postgres
     environment:
@@ -66,7 +66,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - project-opa_model_data:/app
+      - model_data:/app
     environment:
       - PYTHONUNBUFFERED=1
 
