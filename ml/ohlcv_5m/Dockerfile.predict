@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copier le code de prédiction et le modèle
 COPY predict.py .
 COPY predict_loop.py .
-#COPY model.pkl .
+COPY model.pkl .
 
 CMD ["python", "predict_loop.py"]

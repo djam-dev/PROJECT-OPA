@@ -65,8 +65,8 @@ services:
       dockerfile: Dockerfile.predict
     depends_on:
       - postgres
-    volumes:
-      - model_data:/app
+    #volumes:
+    #  - model_data:/app
     environment:
       - PYTHONUNBUFFERED=1
 
