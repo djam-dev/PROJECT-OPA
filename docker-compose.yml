@@ -47,6 +47,29 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    
+  ml_train:
+    build:
+      context: ./ml/ohlcv_5m
+      dockerfile: Dockerfile.train
+    volumes:
+      - model_data:/app
+    depends_on:
+      - postgres
+    environment:
+      - PYTHONUNBUFFERED=1
+  
+  ml_predict:
+    build:
+      context: ./ml/ohlcv_5m
+      dockerfile: Dockerfile.predict
+    depends_on:
+      - postgres
+    volumes:
+      - model_data:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+
 
   pgadmin:
     container_name: pgadmin4_container
@@ -128,3 +151,4 @@ services:
 
 volumes:
   postgres_data:
+  model_data:

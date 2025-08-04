@@ -1,0 +1,15 @@
+# ml/ohlcv_5m/Dockerfile.predict
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Installer les dépendances
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copier le code de prédiction et le modèle
+COPY predict.py .
+COPY model.pkl .
+
+CMD ["python", "predict.py"]
