@@ -13,4 +13,7 @@ COPY predict.py .
 COPY predict_loop.py .
 #COPY model.pkl .
 
+# Dossier pour le modèle (qui viendra du volume)
+RUN mkdir /model
+
 CMD ["python", "predict_loop.py"]

@@ -8,7 +8,7 @@ import time
 # --- Config ---
 SEQ_LEN = 12
 FEATURES = ['open', 'high', 'low', 'close', 'volume']
-MODEL_PATH = "model.pkl"
+MODEL_PATH = "/model/model.pkl"
 TABLE_NAME = "binance_ohlcv_5m"
 PREDICT_TABLE = "predictions_5m"
 
@@ -66,6 +66,7 @@ def get_latest_window():
 
 # Charge le modèle et effectue une prédiction à partir du vecteur de features
 def predict_next_close(X_flattened):
+    print(f"Chargement modèle depuis {MODEL_PATH}...")
     model = joblib.load(MODEL_PATH)
     prediction = model.predict([X_flattened])
     return float(prediction[0])

@@ -56,6 +56,7 @@ services:
       - model_data:/app
     depends_on:
       - postgres
+      - consumer_ccxt
     environment:
       - PYTHONUNBUFFERED=1
   
@@ -66,22 +67,22 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./ml/ohlcv_5m/model.pkl:/app/model.pkl
+      - model_data:/model
     environment:
       - PYTHONUNBUFFERED=1
 
 
-  pgadmin:
-    container_name: pgadmin4_container
-    image: dpage/pgadmin4
-    build:
-      context: ./services/pgadmin
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: VALENTIN.DORMEUIL.PRO@GMAIL.COM
-      PGADMIN_DEFAULT_PASSWORD: PROJETOPA
-    ports:
-      - "5050:80"
+  #pgadmin:
+  #  container_name: pgadmin4_container
+  #  image: dpage/pgadmin4
+  # build:
+  #    context: ./services/pgadmin
+  #  restart: always
+  #  environment:
+  #    PGADMIN_DEFAULT_EMAIL: VALENTIN.DORMEUIL.PRO@GMAIL.COM
+  #    PGADMIN_DEFAULT_PASSWORD: PROJETOPA
+  #  ports:
+  #    - "5050:80"
 
   #producer:
   #  build:
@@ -126,28 +127,28 @@ services:
       KAFKA_SERVER: kafka:9092
       KAFKA_TOPIC: Binance_ohlcv_5m
 
-  jupyter:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./projet_opa:/app
-    depends_on:
-      - kafka
-      - postgres
-    command: ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --no-browser"]
+  #jupyter:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "8888:8888"
+  #  volumes:
+  #    - ./projet_opa:/app
+  #  depends_on:
+  #    - kafka
+  #    - postgres
+  #  command: ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --no-browser"]
 
-  fastapi:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    depends_on:
-      - kafka
-      - postgres
+  #fastapi:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "8000:8000"
+  #  depends_on:
+  #    - kafka
+  #    - postgres
 
 volumes:
   postgres_data:
