@@ -4,6 +4,7 @@ import psycopg2
 import joblib
 from sklearn.ensemble import RandomForestRegressor
 from datetime import datetime
+import time
 
 # -----------------------------
 # Paramètres
@@ -70,7 +71,21 @@ def train_and_save_model(X, y):
     joblib.dump(model, MODEL_PATH)
     print(f"Modèle sauvegardé sous {MODEL_PATH}")
 
+# Attente que la table soit disponible
+def wait_for_table():
+    print(f"⏳ Attente que la table '{TABLE_NAME}' soit disponible...")
+    import psycopg2.errors
+    while True:
+        try:
+            _ = load_data()
+            print(f"✅ Table '{TABLE_NAME}' disponible.")
+            break
+        except psycopg2.errors.UndefinedTable:
+            print("⏳ Table non encore créée, nouvelle tentative dans 3s...")
+            time.sleep(3)
+
 def main():
+    wait_for_table()
     df = load_data()
     X, y = create_dataset(df)
     train_and_save_model(X, y)
