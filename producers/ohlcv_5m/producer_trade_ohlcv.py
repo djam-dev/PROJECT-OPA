@@ -11,6 +11,7 @@ limit = 500
 
 # Exchange
 exchange = ccxt.binance()
+exchange.load_markets()
 
 # Chargement de la date de départ
 def load_last_timestamp(filename="last_timestamp.txt"):
