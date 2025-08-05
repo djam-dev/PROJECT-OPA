@@ -71,28 +71,17 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
 
-
-  #pgadmin:
-  #  container_name: pgadmin4_container
-  #  image: dpage/pgadmin4
-  # build:
-  #    context: ./services/pgadmin
-  #  restart: always
-  #  environment:
-  #    PGADMIN_DEFAULT_EMAIL: VALENTIN.DORMEUIL.PRO@GMAIL.COM
-  #    PGADMIN_DEFAULT_PASSWORD: PROJETOPA
-  #  ports:
-  #    - "5050:80"
-
-  #producer:
-  #  build:
-  #    context: .
-  #    dockerfile: Dockerfile
-  #  depends_on:
-  #    - kafka
-  #    - postgre
-  #  environment:
-  #    KAFKA_HOST: kafka:9092
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    build:
+      context: ./services/pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: VALENTIN.DORMEUIL.PRO@GMAIL.COM
+      PGADMIN_DEFAULT_PASSWORD: PROJETOPA
+    ports:
+      - "5050:80"
 
   producer_ccxt:
     build:
@@ -101,16 +90,6 @@ services:
       - kafka
     environment:
       - KAFKA_SERVER=kafka:9092
-
-  #consumer:
-  #  build:
-  #    context: .
-  #    dockerfile: Dockerfile
-  #  depends_on:
-  #    - kafka
-  #    - postgre
-  #  environment:
-  #    KAFKA_HOST: kafka:9092
 
   consumer_ccxt:
     build:
@@ -127,28 +106,24 @@ services:
       KAFKA_SERVER: kafka:9092
       KAFKA_TOPIC: Binance_ohlcv_5m
 
-  #jupyter:
-  #  build:
-  #    context: .
-  #    dockerfile: Dockerfile
-  #  ports:
-  #    - "8888:8888"
-  #  volumes:
-  #    - ./projet_opa:/app
-  #  depends_on:
-  #    - kafka
-  #    - postgres
-  #  command: ["sh", "-c", "jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --no-browser"]
+  fastapi:
+    build:
+      context: ./fastapi
+      dockerfile: Dockerfile.fastapi
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    environment:
+      - PYTHONUNBUFFERED=1
 
-  #fastapi:
-  #  build:
-  #    context: .
-  #    dockerfile: Dockerfile
-  #  ports:
-  #    - "8000:8000"
-  #  depends_on:
-  #    - kafka
-  #    - postgres
+  streamlit:
+    build:
+      context: ./streamlit
+    ports:
+      - "8501:8501"
+    depends_on:
+      - fastapi
 
 volumes:
   postgres_data:
